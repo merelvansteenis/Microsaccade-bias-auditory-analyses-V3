@@ -1,6 +1,6 @@
 # MICROSACCADE BIAS AUDITORY ANALYSIS
 # ***[work in progress]***
-Analysis scripts (in MATLAB) for the data acquired from the auditory microsaccade-bias experiment (in Python). For the experiment, see: [Auditory-microsaccade-bias-main](https://github.com/annavanharmelen/Auditory-microsaccade-bias).
+Analysis scripts (in MATLAB) for the data acquired from the auditory microsaccade-bias experiment (in Python) VERSION 3. For the experiment, see: [Auditory-microsaccade-bias-main](https://github.com/annavanharmelen/Auditory-microsaccade-bias).
 
 ## Author
 Made by Anna van Harmelen in 2026, with scripts from Dr. Freek van Ede.
