@@ -7,7 +7,7 @@ display_percentage_ok = 1;
 plot_individuals = 0;
 plot_averages = 1;
 
-pp2do = [6:12];
+pp2do = [1:7];
 p = 0;
 
 subplot_size = 1;
