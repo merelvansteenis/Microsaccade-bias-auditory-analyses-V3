@@ -20,18 +20,29 @@ for pp = pp2do
     param = getSubjParam(pp);
     disp(['getting data from ', param.subjName]);
     
-    %% load actual behavioural data
-    behdata = readtable(param.log);
+    %% load actual behavioural data seperatly for auditory vs visual
+   behdata_a = readtable(param.log_a);
+   behdata_v = readtable(param.log_v);
 
-    %% check percentage oktrials
+    %% check percentage oktrials for auditory task
     % select trials with reasonable decision times
-    oktrials = abs(zscore(behdata.idle_reaction_time_in_ms))<=3; 
-    percentageok(p,1) = mean(oktrials)*100;
+    oktrials_a = abs(zscore(behdata_a.idle_reaction_time_in_ms))<=3; 
+    percentageok_a(p,1) = mean(oktrials_a)*100;
   
+   %% check percentage oktrials for visual task
+    % select trials with reasonable decision times
+    oktrials_v = abs(zscore(behdata_v.idle_reaction_time_in_ms))<=3; 
+    percentageok_v(p,1) = mean(oktrials_v)*100;
+
     % display percentage ok trials
     if display_percentage_ok
-        fprintf('%s has %.2f%% oktrials\n\n', param.subjName, percentageok(p,1))
+        fprintf('%s AUDITORY has %.2f%% oktrials\n', ...
+        param.subjName, percentageok_a(p,1));
+
+    fprintf('%s VISUAL has %.2f%% oktrials\n\n', ...
+        param.subjName, percentageok_v(p,1));
     end
+
     %% basic data checks, each pp in own subplot
     if plot_individuals
         figure(figure_nr);
