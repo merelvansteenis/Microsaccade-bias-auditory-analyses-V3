@@ -51,3 +51,5 @@ eds_string_v = sprintf('%d_%d_%d.asc', ...
 param.eds_v = fullfile(param.path_v, eds_string_v);
 
 end
+
+%% deleting pp number 3 with unique number 75 since headphones was on the wrong way (possibly including this back into the data set later but trigger codes must be flipped L/R)
