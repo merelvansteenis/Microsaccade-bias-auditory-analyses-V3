@@ -5,8 +5,8 @@ function param = getSubjParam(pp)
 %% set path and pp-specific file locations
 unique_numbers = [68, 43, 75, 79, 29, 63, 77]; %needs to be in the right order
 
-%% set path to auditory task
-param.path.auditory = '/Users/merelvansteenis/Documents//Users/merelvansteenis/Documents/m6.2 - auditory vs visual/';
+%% set path
+param.path = '/Users/merelvansteenis/Documents//Users/merelvansteenis/Documents/m6.2 - auditory vs visual/';
 
 %% Task-specific folders
 param.path_a = fullfile(param.path, 'Auditory/');
