@@ -98,61 +98,105 @@ for pp = pp2do
         % auditory
             subplot(1,2,1);
             histogram(behdata_a.performance_abs, 50);
-            title(['AUD abs performance - pp ', num2str(pp2do(p))]);
+            title(['auditory task abs performance - pp ', num2str(pp2do(p))]);
             xlim([0 10]);
         % visual
             subplot(1,2,2);
             histogram(behdata_v.performance_abs, 50);
-            title(['VIS abs performance - pp ', num2str(pp2do(p))]);
+            title(['visual task abs performance - pp ', num2str(pp2do(p))]);
             xlim([0 10]);
         end
 
     
     %% trial selections
-    left_trials = ismember(behdata.target_position, {'left'});
-    right_trials = ismember(behdata.target_position, {'right'});
+    %auditory
+    left_trials_a = ismember(behdata_a.target_position, {'left'});
+    right_trials_a = ismember(behdata_a.target_position, {'right'});
 
-    first_target_trials = behdata.target_item == 1;
-    second_target_trials = behdata.target_item == 2;
+    first_target_trials_a = behdata_a.target_item == 1;
+    second_target_trials_a = behdata_a.target_item == 2;
 
-    low_trials = ismember(behdata.target_pitch_cat, {'low'});
-    high_trials = ismember(behdata.target_pitch_cat, {'high'});
+    low_trials_a = ismember(behdata_a.target_pitch_cat, {'low'});
+    high_trials_a = ismember(behdata_a.target_pitch_cat, {'high'});
 
-    premature_trials = ismember(behdata.premature_pressed, {'True'});
-    
-    %% extract data of interest
-    overall_dt(p,1) = mean(behdata.idle_reaction_time_in_ms(oktrials), "omitnan");
-    overall_abs_error(p,1) = mean(behdata.performance_abs(oktrials), "omitnan");
-    overall_error(p,1) = mean(behdata.performance(oktrials), "omitnan");
-    
+    premature_trials_a = ismember(behdata_a.premature_pressed, {'True'});
+
+    %% extract data of interest (AUDITORY)
+    overall_dt_a(p,1) = mean(behdata_a.idle_reaction_time_in_ms(oktrials_a), "omitnan");
+    overall_abs_error_a(p,1) = mean(behdata_a.performance_abs(oktrials_a), "omitnan");
+    overall_error_a(p,1) = mean(behdata_a.performance(oktrials_a), "omitnan");
+
     labels = {'low', 'high'};
 
-    % get reaction time as function of pitch category
-    dt_pitch(p,1) = mean(behdata.idle_reaction_time_in_ms(low_trials&oktrials), "omitnan");
-    dt_pitch(p,2) = mean(behdata.idle_reaction_time_in_ms(high_trials&oktrials), "omitnan");
-    
-    % get error as function of pitch category
-    error_pitch(p,1) = mean(behdata.performance_abs(low_trials&oktrials), "omitnan");
-    error_pitch(p,2) = mean(behdata.performance_abs(high_trials&oktrials), "omitnan");
+    % reaction time as function of pitch category (AUD)
+    dt_pitch_a(p,1) = mean(behdata_a.idle_reaction_time_in_ms(low_trials_a & oktrials_a), "omitnan");
+    dt_pitch_a(p,2) = mean(behdata_a.idle_reaction_time_in_ms(high_trials_a & oktrials_a), "omitnan");
 
-    % get responded frequency as function of pitch category
-    response_pitch(p,1) = mean(behdata.response_freq(low_trials&oktrials), "omitnan");
-    response_pitch(p,2) = mean(behdata.response_freq(high_trials&oktrials), "omitnan");
+    % error as function of pitch category (AUD)
+    error_pitch_a(p,1) = mean(behdata_a.performance_abs(low_trials_a & oktrials_a), "omitnan");
+    error_pitch_a(p,2) = mean(behdata_a.performance_abs(high_trials_a & oktrials_a), "omitnan");
 
-    %% get behavioural effect as function of target pitch
+    % response frequency (AUD)
+    response_pitch_a(p,1) = mean(behdata_a.response_freq(low_trials_a & oktrials_a), "omitnan");
+    response_pitch_a(p,2) = mean(behdata_a.response_freq(high_trials_a & oktrials_a), "omitnan");
+
+    %% frequency loop (AUD)
     frequencies = [300, 316, 332, 350, 368, 408, 429, 451, 475, 500];
 
     i = 0;
     for freq = frequencies
         i = i + 1;
 
-        trial_sel = behdata.target_pitch == freq;
+        trial_sel_a = behdata_a.target_pitch == freq;
 
-        dt_pitches(p,i) = mean(behdata.idle_reaction_time_in_ms(trial_sel&oktrials), "omitnan");
-        rt_pitches(p,i) = mean(behdata.response_time_in_ms(trial_sel&oktrials), "omitnan");
-        response_pitches(p,i) = mean(behdata.response_freq(trial_sel&oktrials), "omitnan");
-        error_pitches(p,i) = mean(behdata.performance(trial_sel&oktrials), "omitnan");
-        abs_error_pitches(p,i) = mean(behdata.performance_abs(trial_sel&oktrials), "omitnan");
+        dt_pitches_a(p,i) = mean(behdata_a.idle_reaction_time_in_ms(trial_sel_a & oktrials_a), "omitnan");
+        rt_pitches_a(p,i) = mean(behdata_a.response_time_in_ms(trial_sel_a & oktrials_a), "omitnan");
+        response_pitches_a(p,i) = mean(behdata_a.response_freq(trial_sel_a & oktrials_a), "omitnan");
+        error_pitches_a(p,i) = mean(behdata_a.performance(trial_sel_a & oktrials_a), "omitnan");
+        abs_error_pitches_a(p,i) = mean(behdata_a.performance_abs(trial_sel_a & oktrials_a), "omitnan");
+    end
+
+    %visual
+    left_trials_v = ismember(behdata_v.target_position, {'left'});
+    right_trials_v = ismember(behdata_v.target_position, {'right'});
+
+    first_target_trials_v = behdata_v.target_item == 1;
+    second_target_trials_v = behdata_v.target_item == 2;
+
+    low_trials_v = ismember(behdata_v.target_pitch_cat, {'low'});
+    high_trials_v = ismember(behdata_v.target_pitch_cat, {'high'});
+
+    premature_trials_v = ismember(behdata_v.premature_pressed, {'True'});
+
+    %% extract data of interest (VISUAL)
+    overall_dt_v(p,1) = mean(behdata_v.idle_reaction_time_in_ms(oktrials_v), "omitnan");
+    overall_abs_error_v(p,1) = mean(behdata_v.performance_abs(oktrials_v), "omitnan");
+    overall_error_v(p,1) = mean(behdata_v.performance(oktrials_v), "omitnan");
+
+    % reaction time as function of pitch category (VIS)
+    dt_pitch_v(p,1) = mean(behdata_v.idle_reaction_time_in_ms(low_trials_v & oktrials_v), "omitnan");
+    dt_pitch_v(p,2) = mean(behdata_v.idle_reaction_time_in_ms(high_trials_v & oktrials_v), "omitnan");
+
+    % error as function of pitch category (VIS)
+    error_pitch_v(p,1) = mean(behdata_v.performance_abs(low_trials_v & oktrials_v), "omitnan");
+    error_pitch_v(p,2) = mean(behdata_v.performance_abs(high_trials_v & oktrials_v), "omitnan");
+
+    % response frequency (VIS)
+    response_pitch_v(p,1) = mean(behdata_v.response_freq(low_trials_v & oktrials_v), "omitnan");
+    response_pitch_v(p,2) = mean(behdata_v.response_freq(high_trials_v & oktrials_v), "omitnan");
+
+    %% frequency loop (VIS)
+    i = 0;
+    for freq = frequencies
+        i = i + 1;
+
+        trial_sel_v = behdata_v.target_pitch == freq;
+
+        dt_pitches_v(p,i) = mean(behdata_v.idle_reaction_time_in_ms(trial_sel_v & oktrials_v), "omitnan");
+        rt_pitches_v(p,i) = mean(behdata_v.response_time_in_ms(trial_sel_v & oktrials_v), "omitnan");
+        response_pitches_v(p,i) = mean(behdata_v.response_freq(trial_sel_v & oktrials_v), "omitnan");
+        error_pitches_v(p,i) = mean(behdata_v.performance(trial_sel_v & oktrials_v), "omitnan");
+        abs_error_pitches_v(p,i) = mean(behdata_v.performance_abs(trial_sel_v & oktrials_v), "omitnan");
     end
     
 end
