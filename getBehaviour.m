@@ -44,37 +44,68 @@ for pp = pp2do
     end
 
     %% basic data checks, each pp in own subplot
+    %% decision time   
     if plot_individuals
         figure(figure_nr);
-        figure_nr = figure_nr+1;
-        subplot(subplot_size,subplot_size,p);
-        h = histogram(behdata.idle_reaction_time_in_ms,50);
-        title(['decision time - pp ', num2str(pp2do(p))]);
-        xlim([0 2000]);
-        ylim([0 150]);
+        figure_nr = figure_nr+1; 
+        % auditory
+            subplot(1,2,1);
+            histogram(behdata_a.idle_reaction_time_in_ms, 50);
+            title(['Auditory task decision time - pp ', num2str(pp2do(p))]);
+            xlim([0 2000]);
+            ylim([0 150]);
 
+         % visual
+            subplot(1,2,2);
+            histogram(behdata_v.idle_reaction_time_in_ms, 50);
+            title(['Visual task decision time - pp ', num2str(pp2do(p))]);
+            xlim([0 2000]);
+            ylim([0 150]);
+    
+    %% response time
+        figure(figure_nr);
+        figure_nr = figure_nr + 1;
+        % auditory
+            subplot(1,2,1);
+            histogram(behdata_a.response_time_in_ms, 50);
+            title(['Auditory task response time - pp ', num2str(pp2do(p))]);
+            xlim([0 2010]);
+            ylim([0 150]);
+        % visual
+            subplot(1,2,2);
+            histogram(behdata_v.response_time_in_ms, 50);
+            title(['Visual task response time - pp ', num2str(pp2do(p))]);
+            xlim([0 2010]);
+            ylim([0 150]);
+
+    %% performance   
         figure(figure_nr);
         figure_nr = figure_nr+1;
-        subplot(subplot_size,subplot_size,p);
-        h = histogram(behdata.response_time_in_ms, 50);
-        title(['response time - pp ', num2str(pp2do(p))]);
-        xlim([0 2010]);
-        ylim([0 150]);
-        
+        % auditory
+            subplot(1,2,1);
+            histogram(behdata_a.performance, 50);
+            title(['auditory task freq offset - pp ', num2str(pp2do(p))]);
+            xlim([-10 10]);
+        % visual
+            subplot(1,2,2);
+            histogram(behdata_v.performance, 50);
+            title(['visual task freq offset - pp ', num2str(pp2do(p))]);
+            xlim([-10 10]);
+
+    %%absolute performance
         figure(figure_nr);
         figure_nr = figure_nr+1;
-        subplot(subplot_size,subplot_size,p);
-        h = histogram(behdata.performance,50);       
-        title(['freq offset (levels) - pp ', num2str(pp2do(p))]);
-        xlim([-10 10]);
-        
-        figure(figure_nr);
-        figure_nr = figure_nr+1;
-        subplot(subplot_size,subplot_size,p);
-        h = histogram(behdata.performance_abs,50);     
-        title(['abs performance - pp ', num2str(pp2do(p))]);
-        xlim([0 10]);
-    end
+        % auditory
+            subplot(1,2,1);
+            histogram(behdata_a.performance_abs, 50);
+            title(['AUD abs performance - pp ', num2str(pp2do(p))]);
+            xlim([0 10]);
+        % visual
+            subplot(1,2,2);
+            histogram(behdata_v.performance_abs, 50);
+            title(['VIS abs performance - pp ', num2str(pp2do(p))]);
+            xlim([0 10]);
+        end
 
     
     %% trial selections
