@@ -204,90 +204,127 @@ end
 if plot_averages
  %% check performance
     figure; 
-    figure_nr = figure_nr+1;
-    subplot(4,1,1);
-    bar(ppnum, overall_dt(:,1));
-    title('overall decision time');
-    ylim([0 1200]);
-    xlabel('pp #');
-
-    subplot(4,1,2);
-    bar(ppnum, overall_error(:,1));
-    ylim([-0.4 0.8]);
-    title('overall error');
-    xlabel('pp #');
-
-    subplot(4,1,3);
+    subplot(4,1,1)
     hold on
-    bar(ppnum, overall_abs_error(:,1));
-    plot([0, max(ppnum)], [250 250]);
-    ylim([0 3]);
-    title('overall abs error');
-    xlabel('pp #');
+    bar(ppnum-0.2, overall_dt_a(:,1), 0.4);
+    bar(ppnum+0.2, overall_dt_v(:,1), 0.4);
+    title('Overall decision time');
+    ylabel('ms');
+    xlabel('Participant');
+    legend({'Auditory','Visual'});
+    ylim([0 1200]);
 
-    subplot(4,1,4);
-    bar(ppnum, percentageok);
-    title('percentage ok trials');
+    subplot(4,1,2)
+    hold on
+    bar(ppnum-0.2, overall_error_a(:,1), 0.4);
+    bar(ppnum+0.2, overall_error_v(:,1), 0.4);
+    title('Overall error');
+    ylabel('Error');
+    xlabel('Participant');
+    legend({'Auditory','Visual'});
+    ylim([-0.4 0.8]);
+
+    subplot(4,1,3)
+    hold on
+    bar(ppnum-0.2, overall_abs_error_a(:,1), 0.4);
+    bar(ppnum+0.2, overall_abs_error_v(:,1), 0.4);
+    title('Overall ABS error');
+    ylabel('ABS error');
+    xlabel('Participant');
+    legend({'Auditory','Visual'});
+    ylim([0 3]);
+
+    subplot(4,1,4)
+    hold on
+    bar(ppnum-0.2, percentageok_a(:,1), 0.4);
+    bar(ppnum+0.2, percentageok_v(:,1), 0.4);
+    title('Percentage OK trials');
+    ylabel('%');
+    xlabel('Participant');
+    legend({'Auditory','Visual'});
     ylim([90 100]);
-    xlabel('pp #');
 
     %% effect of target pitch category on behaviour
-    figure(figure_nr);
-    figure_nr = figure_nr+1;
-    bar(mean(dt_pitch, 1));
-    xticklabels(labels)
+    figure;
+    subplot(1,3,1)
+    hold on
+    bar(mean(dt_pitch_a,1));
+    bar(mean(dt_pitch_v,1));
+    xticklabels(labels);
     ylabel('Decision time (ms)');
+    title('Decision time');
+    legend({'Auditory','Visual'});
 
-    figure(figure_nr);
-    figure_nr = figure_nr+1;
-    bar(mean(error_pitch, 1));
-    xticklabels(labels)
-    ylabel('Reproduction error (a.u.)');
+    subplot(1,3,2)
+    hold on
+    bar(mean(error_pitch_a,1));
+    bar(mean(error_pitch_v,1));
+    xticklabels(labels);
+    ylabel('Reproduction error');
+    title('ABS Error');
+    legend({'Auditory','Visual'});
 
-    figure(figure_nr);
-    figure_nr = figure_nr+1;
-    bar(mean(response_pitch, 1));
-    xticklabels(labels)
-    ylabel('Reproduced pitch (Hz)');
+    subplot(1,3,3)
+    hold on
+    bar(mean(response_pitch_a,1));
+    bar(mean(response_pitch_v,1));
+    xticklabels(labels);
+    ylabel('Responded frequency (Hz)');
+    title('Response frequency');
+    legend({'Auditory','Visual'});
 
     %% effect of target pitch on behaviour
-    figure(figure_nr);
-    figure_nr = figure_nr+1;
-    bar(mean(dt_pitches, 1));
-    xticklabels(frequencies);
+    figure;
+    hold on
+    plot(frequencies, mean(dt_pitches_a,1), '-o', 'LineWidth',2);
+    plot(frequencies, mean(dt_pitches_v,1), '-o', 'LineWidth',2);
+
     xlabel('Target frequency (Hz)');
     ylabel('Decision time (ms)');
+    title('Decision time by frequency');
+    legend({'Auditory','Visual'});
     
-    figure(figure_nr);
-    figure_nr = figure_nr+1;
-    bar(mean(rt_pitches, 1));
-    xticklabels(frequencies);
+    figure;
+    hold on
+    plot(frequencies, mean(rt_pitches_a,1), '-o', 'LineWidth',2);
+    plot(frequencies, mean(rt_pitches_v,1), '-o', 'LineWidth',2);
+
     xlabel('Target frequency (Hz)');
     ylabel('Response time (ms)');
+    title('Response time by frequency');
+    legend({'Auditory','Visual'});
 
-    figure(figure_nr);
-    figure_nr = figure_nr+1;
+    figure;
     hold on
-    plot(frequencies, response_pitches', '-o');
-    plot(frequencies, frequencies, '-o');
-    xticks(frequencies);
-    xticklabels(frequencies);
+    plot(frequencies, mean(response_pitches_a,1), '-o', 'LineWidth',2);
+    plot(frequencies, mean(response_pitches_v,1), '-o', 'LineWidth',2);
+
+    % ideal response line
+    plot(frequencies, frequencies, '--k', 'LineWidth',2);
+
     xlabel('Target frequency (Hz)');
     ylabel('Responded frequency (Hz)');
-    legend({'p1', 'p2', 'p3', 'p5', 'p6','ideal pp'});
+    title('Responded frequency');
+    legend({'Auditory','Visual','Ideal response'});
 
-    figure(figure_nr);
-    figure_nr = figure_nr+1;
-    bar(mean(error_pitches, 1));
-    xticklabels(frequencies);
-    xlabel('Target frequency (Hz)');
-    ylabel('Reproduction error (a.u.)');
+    figure;
+    hold on
+    plot(frequencies, mean(error_pitches_a,1), '-o', 'LineWidth',2);
+    plot(frequencies, mean(error_pitches_v,1), '-o', 'LineWidth',2);
 
-    figure(figure_nr);
-    figure_nr = figure_nr+1;
-    bar(mean(abs_error_pitches, 1));
-    xticklabels(frequencies);
     xlabel('Target frequency (Hz)');
-    ylabel('ABS reproduction error (a.u.)');
+    ylabel('Reproduction error');
+    title(' Error');
+    legend({'Auditory','Visual'});
+
+    figure;
+    hold on
+    plot(frequencies, mean(abs_error_pitches_a,1), '-o', 'LineWidth',2);
+    plot(frequencies, mean(abs_error_pitches_v,1), '-o', 'LineWidth',2);
+
+    xlabel('Target frequency (Hz)');
+    ylabel('ABS reproduction error');
+    title('Absolute error');
+    legend({'Auditory','Visual'});
 
 end
