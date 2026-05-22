@@ -6,11 +6,11 @@ function param = getSubjParam(pp)
 unique_numbers = [68, 43, 75, 79, 29, 63, 77]; %needs to be in the right order
 
 %% set path
-param.path = '/Users/merelvansteenis/Documents//Users/merelvansteenis/Documents/m6.2 - auditory vs visual/';
+param.path = '/Users/merelvansteenis/Documents/Cognitive Neuropsychology/PSR/Data/m6.2 - auditory vs visual/';
 
 %% Task-specific folders
-param.path_a = fullfile(param.path, 'Auditory/');
-param.path_v = fullfile(param.path, 'Visual/');
+param.path_a = fullfile(param.path, 'Auditory');
+param.path_v = fullfile(param.path, 'Visual');
 
 if pp < 10
     param.subjName = sprintf('pp0%d', pp);
@@ -51,5 +51,3 @@ eds_string_v = sprintf('%d_%d_%d.asc', ...
 param.eds_v = fullfile(param.path_v, eds_string_v);
 
 end
-
-%% deleting pp number 3 with unique number 75 since headphones was on the wrong way (possibly including this back into the data set later but trigger codes must be flipped L/R)

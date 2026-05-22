@@ -7,7 +7,7 @@ display_percentage_ok = 1;
 plot_individuals = 0;
 plot_averages = 1;
 
-pp2do = [1:7];
+pp2do = [1 2 4 5 6 7]; % skip pp number 3 with unique number 75 since headphones was on the wrong way (possibly including this back into the data set later but trigger codes must be flipped L/R)
 p = 0;
 
 subplot_size = 1;
