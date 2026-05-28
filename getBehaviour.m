@@ -89,7 +89,7 @@ for pp = pp2do
         % visual
             subplot(1,2,2);
             histogram(behdata_v.performance, 50);
-            title(['visual task freq offset - pp ', num2str(pp2do(p))]);
+            title(['visual task colour offset - pp ', num2str(pp2do(p))]);
             xlim([-10 10]);
 
     %%absolute performance
@@ -163,8 +163,8 @@ for pp = pp2do
     first_target_trials_v = behdata_v.target_item == 1;
     second_target_trials_v = behdata_v.target_item == 2;
 
-    low_trials_v = ismember(behdata_v.target_pitch_cat, {'low'});
-    high_trials_v = ismember(behdata_v.target_pitch_cat, {'high'});
+    low_trials_v = ismember(behdata_v.target_colour_cat, {'low'});
+    high_trials_v = ismember(behdata_v.target_colour_cat, {'high'});
 
     premature_trials_v = ismember(behdata_v.premature_pressed, {'True'});
 
@@ -173,31 +173,35 @@ for pp = pp2do
     overall_abs_error_v(p,1) = mean(behdata_v.performance_abs(oktrials_v), "omitnan");
     overall_error_v(p,1) = mean(behdata_v.performance(oktrials_v), "omitnan");
 
-    % reaction time as function of pitch category (VIS)
-    dt_pitch_v(p,1) = mean(behdata_v.idle_reaction_time_in_ms(low_trials_v & oktrials_v), "omitnan");
-    dt_pitch_v(p,2) = mean(behdata_v.idle_reaction_time_in_ms(high_trials_v & oktrials_v), "omitnan");
+    % reaction time as function of color category (VIS)
+    dt_coulour_v(p,1) = mean(behdata_v.idle_reaction_time_in_ms(low_trials_v & oktrials_v), "omitnan");
+    dt_colour_v(p,2) = mean(behdata_v.idle_reaction_time_in_ms(high_trials_v & oktrials_v), "omitnan");
 
-    % error as function of pitch category (VIS)
-    error_pitch_v(p,1) = mean(behdata_v.performance_abs(low_trials_v & oktrials_v), "omitnan");
-    error_pitch_v(p,2) = mean(behdata_v.performance_abs(high_trials_v & oktrials_v), "omitnan");
+    % error as function of colour category (VIS)
+    error_colour_v(p,1) = mean(behdata_v.performance_abs(low_trials_v & oktrials_v), "omitnan");
+    error_colour_v(p,2) = mean(behdata_v.performance_abs(high_trials_v & oktrials_v), "omitnan");
 
-    % response frequency (VIS)
-    response_pitch_v(p,1) = mean(behdata_v.response_freq(low_trials_v & oktrials_v), "omitnan");
-    response_pitch_v(p,2) = mean(behdata_v.response_freq(high_trials_v & oktrials_v), "omitnan");
+    % response colour (VIS)
+    % Rename categorical colours
+    behdata_v.response_colour = categorical(behdata_v.response_colour);
 
-    %% frequency loop (VIS)
-    i = 0;
-    for freq = frequencies
-        i = i + 1;
-
-        trial_sel_v = behdata_v.target_pitch == freq;
-
-        dt_pitches_v(p,i) = mean(behdata_v.idle_reaction_time_in_ms(trial_sel_v & oktrials_v), "omitnan");
-        rt_pitches_v(p,i) = mean(behdata_v.response_time_in_ms(trial_sel_v & oktrials_v), "omitnan");
-        response_pitches_v(p,i) = mean(behdata_v.response_freq(trial_sel_v & oktrials_v), "omitnan");
-        error_pitches_v(p,i) = mean(behdata_v.performance(trial_sel_v & oktrials_v), "omitnan");
-        abs_error_pitches_v(p,i) = mean(behdata_v.performance_abs(trial_sel_v & oktrials_v), "omitnan");
-    end
+    behdata_v.response_colour = renamecats(behdata_v.response_colour, ...
+    {'[105, 0.2, 0.5]', '[90, 0.2, 0.5]', '[75, 0.2, 0.5]', ...
+     '[60, 0.2, 0.5]', '[45, 0.2, 0.5]', '[0, 0.2, 0.5]', ...
+     '[345, 0.2, 0.5]', '[330, 0.2, 0.5]', '[315, 0.2, 0.5]'}, ...
+    {'colour 1','colour 2','colour 3','colour 4','colour 5', ...
+     'colour 6','colour 7','colour 8','colour 9'});
+    
+    resp_low  = rmmissing(behdata_v.response_colour(low_trials_v & oktrials_v));
+    resp_high = rmmissing(behdata_v.response_colour(high_trials_v & oktrials_v));
+    
+    % counts
+    resp_low = rmmissing(resp_low);
+    resp_high = rmmissing(resp_high);
+    
+    % proportions (or counts)
+    response_colour_v(p,1,:) = countcats(resp_low);
+    response_colour_v(p,2,:) = countcats(resp_high);
     
 end
 
@@ -249,7 +253,7 @@ if plot_averages
     subplot(1,3,1)
     hold on
     bar(mean(dt_pitch_a,1));
-    bar(mean(dt_pitch_v,1));
+    bar(mean(dt_colour_v,1));
     xticklabels(labels);
     ylabel('Decision time (ms)');
     title('Decision time');
@@ -258,7 +262,7 @@ if plot_averages
     subplot(1,3,2)
     hold on
     bar(mean(error_pitch_a,1));
-    bar(mean(error_pitch_v,1));
+    bar(mean(error_colour_v,1));
     xticklabels(labels);
     ylabel('Reproduction error');
     title('ABS Error');
@@ -267,37 +271,46 @@ if plot_averages
     subplot(1,3,3)
     hold on
     bar(mean(response_pitch_a,1));
-    bar(mean(response_pitch_v,1));
+    bar(mean(response_colour_v,1));
     xticklabels(labels);
     ylabel('Responded frequency (Hz)');
     title('Response frequency');
     legend({'Auditory','Visual'});
 
-    %% effect of target pitch on behaviour
+    %% effect of target pitch (auditory task) and colour (visual task) on deicsion time
     figure;
-    hold on
+    subplot(1,2,1)
     plot(frequencies, mean(dt_pitches_a,1), '-o', 'LineWidth',2);
-    plot(frequencies, mean(dt_pitches_v,1), '-o', 'LineWidth',2);
-
     xlabel('Target frequency (Hz)');
     ylabel('Decision time (ms)');
-    title('Decision time by frequency');
-    legend({'Auditory','Visual'});
-    
-    figure;
-    hold on
-    plot(frequencies, mean(rt_pitches_a,1), '-o', 'LineWidth',2);
-    plot(frequencies, mean(rt_pitches_v,1), '-o', 'LineWidth',2);
+    title('Auditory task');
+    ylim([0 1200]);
 
+    subplot(1,2,2)
+    plot(colours, mean(dt_colours_v,1), '-o', 'LineWidth',2);
+    xticklabels(colours);
+    xlabel('Target colour');
+    ylabel('Decision time (ms)');
+    title('Visual task');
+    ylim([0 1200]);
+    
+    %% effect of target pitch (auditory task) and colour (visual task) on response time
+    figure;
+    
+    subplot(1,2,1)
+    plot(frequencies, mean(rt_pitches_a,1), '-o', 'LineWidth',2);
     xlabel('Target frequency (Hz)');
     ylabel('Response time (ms)');
-    title('Response time by frequency');
-    legend({'Auditory','Visual'});
-
-    figure;
-    hold on
-    plot(frequencies, mean(response_pitches_a,1), '-o', 'LineWidth',2);
-    plot(frequencies, mean(response_pitches_v,1), '-o', 'LineWidth',2);
+    title('Auditory task');
+    ylim([0 1200]);
+    
+    subplot(1,2,2)
+    plot(colours, mean(rt_colours_v,1), '-o', 'LineWidth',2);
+    xticklabels(colours);
+    xlabel('Target colour');
+    ylabel('Response time (ms)');
+    title('Visual task');
+    ylim([0 1200]);
 
     % ideal response line
     plot(frequencies, frequencies, '--k', 'LineWidth',2);
